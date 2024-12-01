@@ -1,5 +1,3 @@
-use core::panic;
-
 use crate::Day;
 
 pub struct Day1;
