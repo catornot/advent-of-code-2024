@@ -1,4 +1,4 @@
-#input at https://adventofcode.com/2021/day/{num}/input
+#input at https://adventofcode.com/{year}/day/{num}/input
 import requests
 
 year = 2024
