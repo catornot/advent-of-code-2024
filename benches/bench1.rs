@@ -9,7 +9,7 @@ fn part_1(bencher: divan::Bencher) {
     bencher
         .with_inputs(|| (Day1, get_input(1).unwrap()))
         .bench_values(|(mut day, input)| {
-            divan::black_box(day.part_1(input));
+            day.part_1(divan::black_box(input));
         });
 }
 
@@ -18,6 +18,6 @@ fn part_2(bencher: divan::Bencher) {
     bencher
         .with_inputs(|| (Day1, get_input(1).unwrap()))
         .bench_values(|(mut day, input)| {
-            divan::black_box(day.part_2(input));
+            day.part_2(divan::black_box(input));
         });
 }
