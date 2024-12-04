@@ -25,3 +25,7 @@ harness = false
 [[bench]]
 name = "bench3"
 harness = false
+
+[[bench]]
+name = "bench4"
+harness = false
