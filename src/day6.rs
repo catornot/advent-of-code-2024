@@ -1,9 +1,6 @@
 use itertools::Itertools;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
-use std::{
-    collections::{HashMap, HashSet},
-    ops::Add,
-};
+use std::collections::{HashMap, HashSet};
 
 const DEFAULT_DIR: (isize, isize) = (-1, 0isize);
 
@@ -37,19 +34,20 @@ impl Day for Day6 {
 
         simulate_guard_on_grid(guard, &grid, &mut covered_position);
 
-        covered_position.into_iter().len().add(1).to_string()
+        // add one since it cuts the last position
+        covered_position.into_iter().len().to_string()
     }
 
     fn part_2(&mut self, input: String) -> String {
         let grid = get_grid(&input);
+        let mut covered_position = HashMap::new();
         let guard = get_guard_pos(&input);
 
-        let x_len = grid.len();
-        let y_len = grid[0].len();
+        simulate_guard_on_grid(guard, &grid, &mut covered_position);
 
-        (0..x_len)
+        covered_position
             .into_par_iter()
-            .flat_map_iter(|x| (0..y_len).map(move |y| (x, y)))
+            .map(|(pos, _)| (pos.0 as usize, pos.1 as usize))
             .filter(|pos| (pos.0 as isize, pos.1 as isize) != guard && grid[pos.0][pos.1] != '#')
             .map(|pos| {
                 let mut grid = grid.clone();
@@ -123,6 +121,9 @@ fn simulate_guard_on_grid(
             guard = next_pos;
         }
     }
+
+    // push last position of the guard
+    _ = covered_position.entry(guard).or_default().insert(dir);
 
     false
 }
