@@ -1,7 +1,8 @@
 use itertools::Itertools;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use std::{
-    collections::HashSet,
-    ops::{Add, Not},
+    collections::{HashMap, HashSet},
+    ops::Add,
 };
 
 const DEFAULT_DIR: (isize, isize) = (-1, 0isize);
@@ -31,7 +32,7 @@ impl Day for Day6 {
 
     fn part_1(&mut self, input: String) -> String {
         let grid = get_grid(&input);
-        let mut covered_position: HashSet<(isize, isize)> = HashSet::new();
+        let mut covered_position = HashMap::new();
         let guard = get_guard_pos(&input);
 
         simulate_guard_on_grid(guard, &grid, &mut covered_position);
@@ -46,49 +47,18 @@ impl Day for Day6 {
         let x_len = grid.len();
         let y_len = grid[0].len();
 
-        // (0..x_len)
-        //     // .into_par_iter()
-        //     // .flat_map_iter(|x| (0..y_len).map(move |y| (x, y)))
-        //     .flat_map(|x| (0..y_len).map(move |y| (x, y)))
-        //     .filter(|pos| (pos.0 as isize, pos.1 as isize) != guard)
-        //     .filter_map(|pos| {
-        //         let c = grid[pos.0][pos.1];
-        //         grid[pos.0][pos.1] = 'o';
-
-        //         let mut covered_position: HashSet<(isize, isize)> = HashSet::new();
-        //         let mut passed = 0;
-
-        //         let r = simulate_guard_on_grid(guard, &grid, &mut covered_position, |pos, dir| {
-        //             if pos == guard && dir == DEFAULT_DIR {
-        //                 passed += 1;
-        //             }
-
-        //             passed > 1
-        //         })
-        //         .not()
-        //         .then_some(());
-
-        //         grid[pos.0][pos.1] = c;
-        //         r
-        //     })
-        //     .count()
-        //     .to_string()
-
         (0..x_len)
-            // .into_par_iter()
-            // .flat_map_iter(|x| (0..y_len).map(move |y| (x, y)))
-            .flat_map(|x| (0..y_len).map(move |y| (x, y)))
-            .filter(|pos| (pos.0 as isize, pos.1 as isize) != guard)
+            .into_par_iter()
+            .flat_map_iter(|x| (0..y_len).map(move |y| (x, y)))
+            .filter(|pos| (pos.0 as isize, pos.1 as isize) != guard && grid[pos.0][pos.1] != '#')
             .map(|pos| {
                 let mut grid = grid.clone();
                 grid[pos.0][pos.1] = 'o';
                 grid
             })
             .filter_map(|grid| {
-                let mut covered_position: HashSet<(isize, isize)> = HashSet::new();
-                simulate_guard_on_grid(guard, &grid, &mut covered_position)
-                    .not()
-                    .then_some(())
+                let mut covered_position = HashMap::new();
+                simulate_guard_on_grid(guard, &grid, &mut covered_position).then_some(())
             })
             .count()
             .to_string()
@@ -116,10 +86,11 @@ fn get_guard_pos(input: &str) -> (isize, isize) {
     guard
 }
 
+// returns true if has passed a cell in the same direction meaning it has completed a loop
 fn simulate_guard_on_grid(
     mut guard: (isize, isize),
     grid: &[Vec<char>],
-    covered_position: &mut HashSet<(isize, isize)>,
+    covered_position: &mut HashMap<(isize, isize), HashSet<(isize, isize)>>,
 ) -> bool {
     let mut dir = DEFAULT_DIR;
 
@@ -136,7 +107,9 @@ fn simulate_guard_on_grid(
             break;
         };
 
-        _ = covered_position.insert(guard);
+        if !covered_position.entry(guard).or_default().insert(dir) {
+            return true;
+        }
 
         if *object != '.' {
             dir = match dir {
