@@ -7,7 +7,7 @@ fn main() {
 #[divan::bench]
 fn part_1(bencher: divan::Bencher) {
     bencher
-        .with_inputs(|| (Day7, get_input(7).unwrap()))
+        .with_inputs(|| (Day9, get_input(9).unwrap()))
         .bench_values(|(mut day, input)| {
             day.part_1(divan::black_box(input));
         });
@@ -17,7 +17,7 @@ fn part_1(bencher: divan::Bencher) {
 #[divan::bench]
 fn part_2(bencher: divan::Bencher) {
     bencher
-        .with_inputs(|| (Day7, get_input(7).unwrap()))
+        .with_inputs(|| (Day9, get_input(9).unwrap()))
         .bench_values(|(mut day, input)| {
             day.part_2(divan::black_box(input));
         });

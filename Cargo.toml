@@ -14,6 +14,9 @@ divan = "0.1.16"
 name = "daylibs"
 path = "src/lib.rs"
 
+[features]
+all-benches = []
+
 [[bench]]
 name = "bench1"
 harness = false
@@ -44,4 +47,8 @@ harness = false
 
 [[bench]]
 name = "bench8"
+harness = false
+
+[[bench]]
+name = "bench9"
 harness = false
