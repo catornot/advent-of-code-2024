@@ -31,6 +31,8 @@ impl Day for Day11 {
         input
             .split_whitespace()
             .map(|rock_num| rock_num.parse::<u64>().expect("has to be a number"))
+            .collect_vec()
+            .into_par_iter()
             .map(|rock| rock_rule::<75>(rock, 0))
             .sum::<u64>()
             .to_string()
