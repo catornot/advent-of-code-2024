@@ -13,7 +13,6 @@ fn part_1(bencher: divan::Bencher) {
         });
 }
 
-#[cfg(feature = "all-benches")]
 #[divan::bench]
 fn part_2(bencher: divan::Bencher) {
     bencher
