@@ -61,3 +61,7 @@ harness = false
 [[bench]]
 name = "bench11"
 harness = false
+
+[[bench]]
+name = "bench13"
+harness = false
