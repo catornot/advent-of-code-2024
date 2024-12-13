@@ -1,6 +1,6 @@
 use std::{
     collections::{HashMap, HashSet},
-    ops::Add,
+    ops::{Add, Mul},
 };
 
 use itertools::Itertools;
@@ -30,7 +30,7 @@ MMMISSJEEE"#;
 
     fn part_1(&mut self, input: String) -> String {
         let grid = get_grid(&input);
-        let adjacency = grid
+        let mut adjacency = grid
             .iter()
             .enumerate()
             .flat_map(|(x, line)| {
@@ -64,10 +64,11 @@ MMMISSJEEE"#;
                     map
                 },
             );
-        let adjacency = merge_adjacent_adjancy_maps(adjacency); // repeat this a few times to account for errors in the merge lol
-        let adjacency = merge_adjacent_adjancy_maps(adjacency);
-        let adjacency = merge_adjacent_adjancy_maps(adjacency);
-        let adjacency = merge_adjacent_adjancy_maps(adjacency);
+
+        for _ in 0..grid.len().mul(grid[0].len()) {
+            adjacency = merge_adjacent_adjancy_maps(adjacency); // repeat this a few times to account for errors in the merge lol
+        }
+
         let areas = adjacency.iter().fold(HashMap::new(), |mut map, (c, maps)| {
             for (i, adjacent) in maps.iter().enumerate() {
                 map.entry((*c, i)).or_insert(adjacent.0.len() as u32);
