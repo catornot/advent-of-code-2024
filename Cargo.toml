@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 itertools = "0.13.0"
-peroxide = "0.39.0"
+peroxide = { version = "0.39.0", default-features = false }
 rayon = "1.10.0"
 
 [dev-dependencies]
