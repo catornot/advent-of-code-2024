@@ -1,3 +1,4 @@
+use itertools::Itertools;
 use std::fs::read_to_string;
 
 pub trait Day {
@@ -9,4 +10,12 @@ pub trait Day {
 
 pub fn get_input(day: usize) -> std::io::Result<String> {
     read_to_string(format!("files/day_{day}"))
+}
+
+pub fn get_grid(input: &str) -> Vec<Vec<char>> {
+    input
+        .lines()
+        .map(|line| line.chars().map(|c| if c == '^' { '.' } else { c }))
+        .map(|iter| iter.collect_vec())
+        .collect_vec()
 }

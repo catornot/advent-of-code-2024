@@ -1,10 +1,9 @@
-use itertools::Itertools;
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use std::collections::{HashMap, HashSet};
 
 const DEFAULT_DIR: (isize, isize) = (-1, 0isize);
 
-use crate::Day;
+use crate::{get_grid, Day};
 
 pub struct Day6;
 
@@ -61,14 +60,6 @@ impl Day for Day6 {
             .count()
             .to_string()
     }
-}
-
-fn get_grid(input: &str) -> Vec<Vec<char>> {
-    input
-        .lines()
-        .map(|line| line.chars().map(|c| if c == '^' { '.' } else { c }))
-        .map(|iter| iter.collect_vec())
-        .collect_vec()
 }
 
 fn get_guard_pos(input: &str) -> (isize, isize) {
