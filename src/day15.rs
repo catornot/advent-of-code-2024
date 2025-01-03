@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use std::{hint::unreachable_unchecked, ops::Add};
 
 use itertools::Itertools;
